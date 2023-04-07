@@ -1,1 +1,4 @@
 SEND WEBHOOK
+
+OPTIONNAL:
+	- DEBUG CONNECTION THROUGH OUT PROCESS, SEE 'Debugger les problèmes de connexion' 'in https://www.upesy.fr/blogs/tutorials/how-to-connect-wifi-acces-point-with-esp32#'

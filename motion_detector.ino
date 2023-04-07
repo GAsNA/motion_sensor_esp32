@@ -10,13 +10,14 @@ const int PIN_TO_SENSOR     = 19;                                // GIOP19 conne
 int       pinStateCurrent   = LOW;
 int       pinStatePrevious  = LOW;
 
+// SEE 'Debugger les problèmes de connexion' in 'https://www.upesy.fr/blogs/tutorials/how-to-connect-wifi-acces-point-with-esp32#'
 void setup() {
 
   Serial.begin(9600);                                           // Initialize serial, bps
   
   delay(1000);                                                  // Why delay here ?
 
-  WiFi.mode(WIFI_STA);                                          // Optionnal
+  WiFi.mode(WIFI_STA);                                          // Optionnal, mode station
   WiFi.begin(SSID_NAME, SSID_PASS);                             // Set credentials for WiFi connection
   Serial.println("\nConnecting");
 
