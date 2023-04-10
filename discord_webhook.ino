@@ -1,12 +1,10 @@
 #include "discord_webhook.h"
 
 //openssl s_client -showcerts -connect discordapp.com:443
-
     //1 s:C = US, O = "Cloudflare, Inc.", CN = Cloudflare Inc ECC CA-3
       //i:C = IE, O = Baltimore, OU = CyberTrust, CN = Baltimore CyberTrust Root
       //a:PKEY: id-ecPublicKey, 256 (bit); sigalg: RSA-SHA256
       //v:NotBefore: Jan 27 12:48:08 2020 GMT; NotAfter: Dec 31 23:59:59 2024 GMT"
-
 const char  *discordCertificate = \
                                   "-----BEGIN CERTIFICATE-----\n"\
                                   "MIIDzTCCArWgAwIBAgIQCjeHZF5ftIwiTv0b7RQMPDANBgkqhkiG9w0BAQsFADBa\n"\
@@ -32,6 +30,7 @@ const char  *discordCertificate = \
                                   "6DEdfgkfCv4+3ao8XnTSrLE=\n"\
                                   "-----END CERTIFICATE-----\n";
 
+// Get with Developer Mode on discord: user settings->advanced-> enable Developer Mode. Then right click on profile->"Copy User ID".
 String  my_id = "<@474355372799557643>";
 
 void  sendDiscordWebhook(String msg, bool ping, int color) {
