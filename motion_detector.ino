@@ -5,6 +5,8 @@
 //    - SSID_PASS
 //    - WEBHOOK_LINK
 #include "env.h"
+#include "connection_wifi.h"
+#include "discord_webhook.h"
 
 const int PIN_TO_SENSOR     = 19;                                // GIOP19 connected to OUTPUT pin of sensor
 int       pinStateCurrent   = LOW;
@@ -15,21 +17,9 @@ void setup() {
 
   Serial.begin(9600);                                           // Initialize serial, bps
   
-  delay(1000);                                                  // Why delay here ?
+  //delay(1000);                                                  // Why delay here ?
 
-  WiFi.mode(WIFI_STA);                                          // Optionnal, mode station
-  WiFi.begin(SSID_NAME, SSID_PASS);                             // Set credentials for WiFi connection
-  Serial.println("\nConnecting");
-
-  while (WiFi.status() != WL_CONNECTED)                         // While not connected to WiFi, try again
-  {
-    Serial.print(".");
-    delay(100);
-  }
-
-  Serial.println("\nConnected to the WiFi network");
-  Serial.print("Local ESP32 IP: ");
-  Serial.println(WiFi.localIP());                               // Print local ESP32 IP
+  connectionToWifi();
 
   pinMode(PIN_TO_SENSOR, INPUT);                                // Set ESP32 pin to input mode to read value from OUTPUT pin of sensor
 
@@ -43,12 +33,14 @@ void loop() {
   if (pinStatePrevious == LOW && pinStateCurrent == HIGH)       // passed from non-active to active
   {
     Serial.println("Motion detected!");
-    // TODO: send webhook of 'motion detected'
+    sendDiscordWebhook("Motion detected!", true, DARK_ORANGE);
+    Serial.print("\n");
   }
   else if (pinStatePrevious == HIGH && pinStateCurrent == LOW)  // passed from active to non-active
   {
     Serial.println("Motion stopped!");
-    // TODO: send webhook of 'motion stopped'
+    sendDiscordWebhook("Motion stopped!", false, DARK_GREEN);
+    Serial.print("\n");
   }
 
 }
