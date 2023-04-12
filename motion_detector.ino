@@ -17,7 +17,7 @@ void setup() {
 
   Serial.begin(9600);                                           // Initialize serial, bps
   
-  //delay(1000);                                                  // Why delay here ?
+  delay(1000);                                                  // Why delay here ?
 
   connectionToWifi();
 
@@ -33,7 +33,7 @@ void loop() {
   if (pinStatePrevious == LOW && pinStateCurrent == HIGH)       // passed from non-active to active
   {
     Serial.println("Motion detected!");
-    sendDiscordWebhook("Motion detected!", true, DARK_ORANGE);
+    sendDiscordWebhook("Motion detected!", true, RED);
     Serial.print("\n");
   }
   else if (pinStatePrevious == HIGH && pinStateCurrent == LOW)  // passed from active to non-active

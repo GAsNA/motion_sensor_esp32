@@ -48,11 +48,14 @@ void  sendDiscordWebhook(String msg, bool ping, int color) {
     HTTPClient https;    
     if (https.begin(client, WEBHOOK_LINK)) {
       https.addHeader("Content-Type", "application/json");
+      //https.addHeader("Content-Type", "multipart/form-data");
+
+      // https://discord.com/developers/docs/resources/webhook
 
       Serial.println("Send message...");
 
       // Use arduinojson.org/v6/assistant to compute the capacity.
-      StaticJsonDocument<192> doc;
+      StaticJsonDocument<384> doc;
 
       // StaticJsonObject allocates memory on the stack, it can be
       // replaced by DynamicJsonDocument which allocates in the heap.
@@ -61,13 +64,36 @@ void  sendDiscordWebhook(String msg, bool ping, int color) {
       if (ping)
         doc["content"] = my_id;
 
-      StaticJsonDocument<96> first_embed;
-      first_embed["description"] = msg;
-      first_embed["title"] = "Something happened...";
-      first_embed["color"] = color;
+      /*StaticJsonDocument<96> attachment;
+      attachment["url"] = "images/red_alert.png";
+      attachment["filename"] = "red_alert.png";
+
+      JsonArray attachments = doc.createNestedArray("attachments");
+      attachments.add(attachment);*/
+
+      StaticJsonDocument<96> file;
+      file["attachment"] = "images/red_alert.png";
+      file["name"] = "red_alert.png";
+
+      JsonArray files = doc.createNestedArray("files");
+      files.add(file);
+
+      StaticJsonDocument<64> thumbnail;
+      if (ping) {
+        thumbnail["url"] = "https://cdn.discordapp.com/embed/avatars/4.png";              // SEND LOCAL IMAGE, HOW ??
+        //thumbnail["url"] = "attachment://red_alert.png";
+        //thumbnail["height"] = 256; ?
+        //thumbnail["witdh"] = 256; ?
+      }
+
+      StaticJsonDocument<256> embed;
+      embed["title"] = "Something happened...";
+      embed["description"] = msg;
+      embed["color"] = color;
+      embed["thumbnail"] = thumbnail;
 
       JsonArray embeds = doc.createNestedArray("embeds");
-      embeds.add(first_embed);
+      embeds.add(embed);
 
       String  output;
       serializeJson(doc, output);
@@ -77,6 +103,7 @@ void  sendDiscordWebhook(String msg, bool ping, int color) {
       if (httpCode > 0) {
         Serial.print("[HTTP] Status code: ");
         Serial.println(httpCode);
+        Serial.println(https.errorToString(httpCode).c_str());
 
         if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
           Serial.print("[HTTP] Response: ");
@@ -90,5 +117,4 @@ void  sendDiscordWebhook(String msg, bool ping, int color) {
       Serial.println("[HTTP] Unable to connect.");
     }
   }
-
 }
