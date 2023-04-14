@@ -1,14 +1,4 @@
-#include <WiFi.h>
-#include <time.h>
-#include <stdlib.h>
-
-// include env.h with define:
-//    - SSID_NAME
-//    - SSID_PASS
-//    - WEBHOOK_LINK
-#include "env.h"
-#include "connection_wifi.h"
-#include "discord_webhook.h"
+#include "motion_detector.h"
 
 const int PIN_TO_SENSOR     = 19;                                // GIOP19 connected to OUTPUT pin of sensor
 int       pinStateCurrent   = LOW;
@@ -53,7 +43,7 @@ void loop() {
     char buf[50];
     ltoa(secondes, buf, 10);
   
-    String str = (String)"Connection lost for " + buf + " secondes.";
+    String str = (String)"Connection lost for " + buf + " secondes.";                             // SOMETIMES IMPOSSIBLE TO REACH CONNECTION AGAIN, WHY ??
     sendDiscordWebhook(str, true, DARK_ORANGE);
   
     begin = NULL;
