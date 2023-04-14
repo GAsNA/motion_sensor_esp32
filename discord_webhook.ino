@@ -39,7 +39,7 @@ void  sendDiscordWebhook(String msg, bool ping, int color) {
 
   client.setCACert(discordCertificate);
 
-  Serial.println("Starting connection to server...");
+  Serial.println("\nStarting connection to server...");
   if (!client.connect("discord.com", 443)) {
     Serial.println("Connection failed!");
   } else {

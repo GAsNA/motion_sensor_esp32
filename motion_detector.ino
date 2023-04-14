@@ -1,4 +1,6 @@
 #include <WiFi.h>
+#include <time.h>
+#include <stdlib.h>
 
 // include env.h with define:
 //    - SSID_NAME
@@ -11,6 +13,11 @@
 const int PIN_TO_SENSOR     = 19;                                // GIOP19 connected to OUTPUT pin of sensor
 int       pinStateCurrent   = LOW;
 int       pinStatePrevious  = LOW;
+
+int       wifiStatus        = WL_IDLE_STATUS;
+int       previousWifiStatus= WL_IDLE_STATUS;
+time_t    begin             = NULL;
+
 
 // SEE 'Debugger les problèmes de connexion' in 'https://www.upesy.fr/blogs/tutorials/how-to-connect-wifi-acces-point-with-esp32#'
 void setup() {
@@ -30,17 +37,39 @@ void loop() {
   pinStatePrevious = pinStateCurrent;
   pinStateCurrent = digitalRead(PIN_TO_SENSOR);                 // Read state of pin
 
+  // CHECK WIFI CONNECTION
+  wifiStatus = WiFi.status();
+  if (wifiStatus != WL_CONNECTED) {
+
+    Serial.println("\nThere is some issues with the connection.");
+    Serial.println((String)"Status is: " + getWifiStatus(wifiStatus));
+    delay(1000);
+
+    if (begin == NULL) { begin = time(NULL); }
+  } else if (wifiStatus == WL_CONNECTED && previousWifiStatus != WL_CONNECTED) {
+    
+    time_t end = time(NULL);
+    unsigned long secondes = (unsigned long) difftime(end, begin);
+    char buf[50];
+    ltoa(secondes, buf, 10);
+  
+    String str = (String)"Connection lost for " + buf + " secondes.";
+    sendDiscordWebhook(str, true, DARK_ORANGE);
+  
+    begin = NULL;
+  }
+  previousWifiStatus = wifiStatus;
+
+  // MOTION DETECTION
   if (pinStatePrevious == LOW && pinStateCurrent == HIGH)       // passed from non-active to active
   {
-    Serial.println("Motion detected!");
+    Serial.println("\nMotion detected!");
     sendDiscordWebhook("Motion detected!", true, RED);
-    Serial.print("\n");
   }
   else if (pinStatePrevious == HIGH && pinStateCurrent == LOW)  // passed from active to non-active
   {
-    Serial.println("Motion stopped!");
+    Serial.println("\nMotion stopped!");
     sendDiscordWebhook("Motion stopped!", false, DARK_GREEN);
-    Serial.print("\n");
   }
 
 }
