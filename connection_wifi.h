@@ -5,5 +5,6 @@
 
 void    connectionToWifi();
 String  getWifiStatus(int status);
+bool    checkConnection();
 
 #endif

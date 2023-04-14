@@ -5,7 +5,7 @@ int       pinStateCurrent   = LOW;
 int       pinStatePrevious  = LOW;
 
 int       wifiStatus        = WL_IDLE_STATUS;
-int       previousWifiStatus= WL_IDLE_STATUS;
+int       previousWifiStatus= WL_CONNECTED;
 time_t    begin             = NULL;
 
 
@@ -28,27 +28,7 @@ void loop() {
   pinStateCurrent = digitalRead(PIN_TO_SENSOR);                 // Read state of pin
 
   // CHECK WIFI CONNECTION
-  wifiStatus = WiFi.status();
-  if (wifiStatus != WL_CONNECTED) {
-
-    Serial.println("\nThere is some issues with the connection.");
-    Serial.println((String)"Status is: " + getWifiStatus(wifiStatus));
-    delay(1000);
-
-    if (begin == NULL) { begin = time(NULL); }
-  } else if (wifiStatus == WL_CONNECTED && previousWifiStatus != WL_CONNECTED) {
-    
-    time_t end = time(NULL);
-    unsigned long secondes = (unsigned long) difftime(end, begin);
-    char buf[50];
-    ltoa(secondes, buf, 10);
-  
-    String str = (String)"Connection lost for " + buf + " secondes.";                             // SOMETIMES IMPOSSIBLE TO REACH CONNECTION AGAIN, WHY ??
-    sendDiscordWebhook(str, true, DARK_ORANGE);
-  
-    begin = NULL;
-  }
-  previousWifiStatus = wifiStatus;
+  checkConnection();
 
   // MOTION DETECTION
   if (pinStatePrevious == LOW && pinStateCurrent == HIGH)       // passed from non-active to active
