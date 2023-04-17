@@ -4,7 +4,7 @@ const int PIN_TO_SENSOR     = 19;                                // GIOP19 conne
 int       pinStateCurrent   = LOW;
 int       pinStatePrevious  = LOW;
 
-int       wifiStatus        = WL_IDLE_STATUS;
+int       wifiStatus        = WL_CONNECTED;
 int       previousWifiStatus= WL_CONNECTED;
 time_t    begin             = NULL;
 
@@ -28,7 +28,7 @@ void loop() {
   pinStateCurrent = digitalRead(PIN_TO_SENSOR);                 // Read state of pin
 
   // CHECK WIFI CONNECTION
-  checkConnection();
+  if (checkConnection() == false) { return; }
 
   // MOTION DETECTION
   if (pinStatePrevious == LOW && pinStateCurrent == HIGH)       // passed from non-active to active

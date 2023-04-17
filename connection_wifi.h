@@ -6,5 +6,6 @@
 void    connectionToWifi();
 String  getWifiStatus(int status);
 bool    checkConnection();
+String  secondsToTime(unsigned long sec);
 
 #endif

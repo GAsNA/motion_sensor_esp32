@@ -17,12 +17,11 @@ void  connectionToWifi() {
     delay(200);
     timeout_counter++;
     if (timeout_counter >= CONNECTION_TIMEOUT * 5) {
-      Serial.println("Can't establish WiFi connexion. Restart...");
-      ESP.restart();
+      Serial.println("Can't establish WiFi connexion. Reload...");
+      //ESP.restart();
+      connectionToWifi();
     }
   }
-
-  wifiStatus = WL_CONNECTED;
 
   Serial.println("\nConnected to the WiFi network");
   Serial.print("Local ESP32 IP: ");
@@ -52,26 +51,74 @@ String  getWifiStatus(int status) {
 }
 
 bool  checkConnection() {
+  static int  other_status = 0; //other_status
+
   wifiStatus = WiFi.status();
   if (wifiStatus != WL_CONNECTED) {
 
     Serial.println("\nThere is some issues with the connection.");
     Serial.println((String)"Status is: " + getWifiStatus(wifiStatus));
-    delay(1000);
 
     if (begin == NULL) { begin = time(NULL); }
+    time_t end = time(NULL);
+    unsigned long secondes = (unsigned long) difftime(end, begin);
+    Serial.println(secondes);
+
+    delay(1000);
+
+    /*if (wifiStatus == WL_IDLE_STATUS) { idle_status++; }
+    else { idle_status = 0; }*/
+    other_status++;
+    if (other_status >= 100) { connectionToWifi(); other_status = 0; }
+
+    previousWifiStatus = wifiStatus;    
+    return false;
   } else if (wifiStatus == WL_CONNECTED && previousWifiStatus != WL_CONNECTED) {
     
     time_t end = time(NULL);
     unsigned long secondes = (unsigned long) difftime(end, begin);
-    char buf[50];
-    ltoa(secondes, buf, 10);
   
-    String str = (String)"Connection lost for " + buf + " secondes.";                             // SOMETIMES IMPOSSIBLE TO REACH CONNECTION AGAIN, WHY ??
+    String str = (String)"Connection lost for " + secondsToTime(secondes) + ".";                             // SOMETIMES IMPOSSIBLE TO REACH CONNECTION AGAIN, WHY ??
     sendDiscordWebhook(str, true, DARK_ORANGE);
   
     begin = NULL;
   }
+  other_status = 0;
   previousWifiStatus = wifiStatus;
   return true;
+}
+
+String  secondsToTime(unsigned long secondes)
+{
+  String  str = "";
+
+  unsigned long minutes = 0;
+  unsigned long hours = 0;
+
+  minutes = long(secondes / 60);
+  secondes = secondes % 60;
+
+  hours = long(minutes / 60);
+  minutes = minutes % 60;
+
+  char  sec[50];
+  ltoa(secondes, sec, 10);
+
+  char  min[50];
+  ltoa(minutes, min, 10);
+
+  char  h[50];
+  ltoa(hours, h, 10);
+
+  if (hours > 0) { str += (String)h + " hour.s"; }
+  if (minutes > 0) {
+    if (str != "") { str += " "; }
+    str += (String)min + " minute.s";
+  }
+  if (secondes > 0) {
+    if (str != "") { str += " and "; }
+    str += (String)sec + " seconde.s";
+  }
+
+  return str;
 }
