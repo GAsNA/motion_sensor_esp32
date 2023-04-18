@@ -5,11 +5,9 @@
 # include <time.h>
 # include <stdlib.h>
 
-// include env.h with define:
-//    - SSID_NAME
-//    - SSID_PASS
-//    - WEBHOOK_LINK
-# include "env.h"
+# include "env.h" // #define SSID_NAME "..."
+                  // #define SSID_PASS "..."
+                  // #define WEBHOOK_LINK "..."
 # include "connection_wifi.h"
 # include "discord_webhook.h"
 
