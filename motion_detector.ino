@@ -14,8 +14,9 @@ void setup() {
 
   Serial.begin(9600);                                           // Initialize serial, bps
   
-  delay(1000);                                                  // Why delay here ?
+  delay(1000);
 
+  // WIFI CONNECTION
   connectionToWifi();
 
   pinMode(PIN_TO_SENSOR, INPUT);                                // Set ESP32 pin to input mode to read value from OUTPUT pin of sensor

@@ -1,5 +1,8 @@
 #include "connection_wifi.h"
 
+/**
+ * @brief Set the WiFi connection with the credentials given in the .env file.
+ */
 void  connectionToWifi() {
 
   WiFi.mode(WIFI_STA);                                          // Optionnal, mode station
@@ -15,7 +18,7 @@ void  connectionToWifi() {
     delay(200);
     
     timeout_counter++;
-    if (timeout_counter >= 500) {
+    if (timeout_counter >= 500) {                               // If timeout, reload the connection
       Serial.println("Can't establish WiFi connexion. Reload...");
       connectionToWifi();
     }
@@ -23,10 +26,16 @@ void  connectionToWifi() {
 
   Serial.println("\nConnected to the WiFi network");
   Serial.print("Local ESP32 IP: ");
-  Serial.println(WiFi.localIP());    // Print local ESP32 IP
+  Serial.println(WiFi.localIP());                               // Print local ESP32 IP
 
 }
 
+/**
+ * @brief Get the WiFi status in a string, according to the int given in parameter.
+ * 
+ * @param status Status of the WiFi connection.
+ * @return String Returns the status in string format.
+ */
 String  getWifiStatus(int status) {
 
   switch(status) {
@@ -48,6 +57,11 @@ String  getWifiStatus(int status) {
 
 }
 
+/**
+ * @brief Check the WiFi connection. If status != connected then count time since the deconnection. If connection lost for more than one minute, connection is reload. If status is back to "connected", then send embed with the time lost.
+ * 
+ * @return bool If WiFi status is "connected" then returns true ; otherwise false.
+ */
 bool  checkConnection() {
   static int  other_status = 0;
 
@@ -84,6 +98,12 @@ bool  checkConnection() {
   return true;
 }
 
+/**
+ * @brief Transform seconds to a string with hours/minutes/secondes.
+ * 
+ * @param long Secondes to transform.
+ * @return String The string with hours/minutes/secondes.
+ */
 String  secondsToTime(unsigned long secondes)
 {
   String  str = "";
