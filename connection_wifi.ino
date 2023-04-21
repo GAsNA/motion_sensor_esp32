@@ -66,30 +66,27 @@ bool  checkConnection() {
   static int  other_status = 0;
 
   wifiStatus = WiFi.status();
-  if (wifiStatus != WL_CONNECTED) {
+  if (wifiStatus != WL_CONNECTED) {                                                           // If WiFi connection lost
 
     Serial.println("\nThere is some issues with the connection.");
     Serial.println((String)"Status is: " + getWifiStatus(wifiStatus));
 
-    if (begin == NULL) { begin = time(NULL); }
-    time_t end = time(NULL);
-    unsigned long secondes = (unsigned long) difftime(end, begin);
-    //Serial.println(secondes);
+    if (begin == NULL) { begin = time(NULL); }                                                // Set begin time for connection lost
 
     delay(1000);
 
     other_status++;
-    if (other_status >= 100) { connectionToWifi(); other_status = 0; }
+    if (other_status >= 100) { connectionToWifi(); other_status = 0; }                        // If status is not connected for more than 1 minute and a half, reload connection.
 
     previousWifiStatus = wifiStatus;    
     return false;
-  } else if (wifiStatus == WL_CONNECTED && previousWifiStatus != WL_CONNECTED) {
+  } else if (wifiStatus == WL_CONNECTED && previousWifiStatus != WL_CONNECTED) {              // If connection is restored
     
     time_t end = time(NULL);
-    unsigned long secondes = (unsigned long) difftime(end, begin);
+    unsigned long secondes = (unsigned long) difftime(end, begin);                            // Get diff time of the disconnection in secondes.
   
     String str = (String)"Connection lost for " + secondsToTime(secondes) + ".";
-    sendDiscordWebhook(str, true, DARK_ORANGE);
+    sendDiscordWebhook(str, true, DARK_ORANGE);                                               // Send discord webhook with the time it disconnected.
   
     begin = NULL;
   }
@@ -110,13 +107,14 @@ String  secondsToTime(unsigned long secondes)
 
   unsigned long minutes = 0, hours = 0;
 
-  minutes = long(secondes / 60);  secondes = secondes % 60;
-  hours = long(minutes / 60);     minutes = minutes % 60;
+  minutes = long(secondes / 60);  secondes = secondes % 60;                               // Get minutes in unsigned long
+  hours = long(minutes / 60);     minutes = minutes % 60;                                 // Get hours in unsigned long
 
-  char  sec[50];  ltoa(secondes, sec, 10);
-  char  min[50];  ltoa(minutes, min, 10);
-  char  h[50];    ltoa(hours, h, 10);
+  char  sec[50];  ltoa(secondes, sec, 10);                                                // Get secondes to char[]
+  char  min[50];  ltoa(minutes, min, 10);                                                 // Get minutes to char[]
+  char  h[50];    ltoa(hours, h, 10);                                                     // Get hours to char[]
 
+  // Get the whole string
   if (hours > 0) { str += (String)h + " hour.s"; }
   if (minutes > 0) {
     if (str != "") { str += " "; }
