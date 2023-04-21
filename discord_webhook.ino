@@ -33,6 +33,13 @@ const char  *discordCertificate = \
 // Get with Developer Mode on discord: user settings->advanced-> enable Developer Mode. Then right click on profile->"Copy User ID".
 String  my_id = "<@474355372799557643>";
 
+/**
+ * @brief Send a embed with a discord webhook
+ * 
+ * @param msg Message to be sent.
+ * @param ping If want to be ping or not.
+ * @param color Color of the embed.
+ */
 void  sendDiscordWebhook(String msg, bool ping, int color) {
 
   WiFiClientSecure client;
