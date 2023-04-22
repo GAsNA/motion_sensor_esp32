@@ -8,6 +8,6 @@
 
 # include "colors.h"
 
-void  sendDiscordWebhook(String msg, bool ping, int color);
+void  sendDiscordWebhook(String title, String msg, bool ping, int color);
 
 #endif

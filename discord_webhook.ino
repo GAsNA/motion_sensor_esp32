@@ -40,7 +40,7 @@ String  my_id = "<@474355372799557643>";
  * @param ping If want to be ping or not.
  * @param color Color of the embed.
  */
-void  sendDiscordWebhook(String msg, bool ping, int color) {
+void  sendDiscordWebhook(String title, String msg, bool ping, int color) {
 
   WiFiClientSecure client;
 
@@ -95,7 +95,7 @@ void  sendDiscordWebhook(String msg, bool ping, int color) {
 
       // Construct embed
       StaticJsonDocument<256> embed;
-      embed["title"] = "Something happened...";
+      embed["title"] = title;
       embed["description"] = msg;
       embed["color"] = color;
       embed["thumbnail"] = thumbnail;

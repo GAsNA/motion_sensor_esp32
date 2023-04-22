@@ -86,7 +86,7 @@ bool  checkConnection() {
     unsigned long secondes = (unsigned long) difftime(end, begin);                            // Get diff time of the disconnection in secondes.
   
     String str = (String)"Connection lost for " + secondsToTime(secondes) + ".";
-    sendDiscordWebhook(str, true, DARK_ORANGE);                                               // Send discord webhook with the time it disconnected.
+    sendDiscordWebhook("Connection lost!", str, true, DARK_ORANGE);                           // Send discord webhook with the time it disconnected.
   
     begin = NULL;
   }
