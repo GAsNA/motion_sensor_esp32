@@ -36,6 +36,7 @@ String  my_id = "<@474355372799557643>";
 /**
  * @brief Send a embed with a discord webhook
  * 
+ * @param title Title of the message.
  * @param msg Message to be sent.
  * @param ping If want to be ping or not.
  * @param color Color of the embed.
