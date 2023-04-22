@@ -87,17 +87,29 @@ void  sendDiscordWebhook(String msg, bool ping, int color) {
 
       StaticJsonDocument<64> thumbnail;
       if (ping) {
-        thumbnail["url"] = "https://cdn.discordapp.com/embed/avatars/4.png";              // SEND LOCAL IMAGE, HOW ??
+        //thumbnail["url"] = "https://cdn.discordapp.com/embed/avatars/4.png";              // SEND LOCAL IMAGE, HOW ??
         //thumbnail["url"] = "attachment://red_alert.png";
         //thumbnail["height"] = 256; ?
         //thumbnail["witdh"] = 256; ?
       }
 
+      // Construct embed
       StaticJsonDocument<256> embed;
       embed["title"] = "Something happened...";
       embed["description"] = msg;
       embed["color"] = color;
       embed["thumbnail"] = thumbnail;
+
+      // Calcul ISO8601 timestamp
+      struct tm timeinfo;
+      if (!getLocalTime(&timeinfo)) {
+        Serial.println("Failed to obtain time");
+      }
+      else {
+        char buf[32];
+        strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", &timeinfo);
+        embed["timestamp"] = buf;
+      }
 
       JsonArray embeds = doc.createNestedArray("embeds");
       embeds.add(embed);
