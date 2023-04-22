@@ -30,7 +30,7 @@ const char  *discordCertificate = \
                                   "6DEdfgkfCv4+3ao8XnTSrLE=\n"\
                                   "-----END CERTIFICATE-----\n";
 
-// Get with Developer Mode on discord: user settings->advanced-> enable Developer Mode. Then right click on profile->"Copy User ID".
+// Get with Developer Mode on discord: user settings->advanced->enable Developer Mode. Then right click on profile->"Copy User ID".
 String  my_id = "<@474355372799557643>";
 
 /**
